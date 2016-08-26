@@ -1,24 +1,39 @@
+
 var http = require('http');
 var port = process.env.PORT || 8000;
 
 var server = http.createServer(function (request, response) {
   if (request.method === 'GET') {
     var headers = request.headers;
+    var conn = request.connection;
 
-    /*var keys = Object.keys(headers);
-    keys.forEach(function(key) {
-      console.log(key + ': ' + '('+typeof headers[key]+') ' + headers[key]);
+    var keys = Object.keys(conn);
+    /*keys.forEach(function(key) {
+      console.log(key + ': ' + '('+typeof conn[key]+') ' + conn[key]);
+
     });*/
+    console.log('remoteAddress' + ': ' + '('+typeof conn.remoteAddress+') ' + conn.remoteAddress);
 
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
     // Note: the 2 lines above could be replaced with this next one:
     // response.writeHead(200, {'Content-Type': 'application/json'})
+    var ip = request.headers['x-forwarded-for'] ||
+     request.connection.remoteAddress ||
+     request.socket.remoteAddress ||
+     request.connection.socket.remoteAddress;
+
+    var lang = headers['accept-language'].split(',')[0];
+    var ua = headers['user-agent'];
+    ua = ua.substring(ua.indexOf('(')+1,ua.indexOf(')'));
+
+
+
 
     var responseBody = {
-      ipaddress: headers['host'],
-      language: headers['accept-language'],
-      software: headers['user-agent']
+      ipaddress: ip,
+      language: headers['accept-language'].split(',')[0],
+      software: ua
     };
 
     response.write(JSON.stringify(responseBody));
