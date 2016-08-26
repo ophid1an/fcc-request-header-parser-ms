@@ -5,14 +5,6 @@ var port = process.env.PORT || 8000;
 var server = http.createServer(function (request, response) {
   if (request.method === 'GET') {
     var headers = request.headers;
-    var conn = request.connection;
-
-    var keys = Object.keys(conn);
-    /*keys.forEach(function(key) {
-      console.log(key + ': ' + '('+typeof conn[key]+') ' + conn[key]);
-
-    });*/
-    console.log('remoteAddress' + ': ' + '('+typeof conn.remoteAddress+') ' + conn.remoteAddress);
 
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
@@ -26,8 +18,6 @@ var server = http.createServer(function (request, response) {
     var lang = headers['accept-language'].split(',')[0];
     var ua = headers['user-agent'];
     ua = ua.substring(ua.indexOf('(')+1,ua.indexOf(')'));
-
-
 
 
     var responseBody = {
